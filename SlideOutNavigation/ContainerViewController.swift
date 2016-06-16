@@ -62,6 +62,13 @@ extension ContainerViewController: CenterViewControllerDelegate {
         }
     }
     
+    func addChildSidePanelController(sidePanelController: SidePanelViewController) {
+        view.insertSubview(sidePanelController.view, atIndex: 0)
+        
+        addChildViewController(sidePanelController)
+        sidePanelController.didMoveToParentViewController(self)
+    }
+    
     func addRightPanelViewController() {
         
     }
