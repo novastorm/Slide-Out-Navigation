@@ -40,7 +40,13 @@ class ContainerViewController: UIViewController {
 
 extension ContainerViewController: CenterViewControllerDelegate {
     func toggleLeftPanel() {
+        let notAlreadyExpanded = (currentState != .LeftPanelExpanded)
         
+        if notAlreadyExpanded {
+            addLeftPanelViewController()
+        }
+        
+        animateLeftPanel(notAlreadyExpanded)
     }
     
     func toggleRightPanel() {
