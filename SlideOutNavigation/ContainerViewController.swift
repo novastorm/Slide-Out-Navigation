@@ -54,7 +54,12 @@ extension ContainerViewController: CenterViewControllerDelegate {
     }
     
     func addLeftPanelViewController() {
-    
+        if leftViewController == nil {
+            leftViewController = UIStoryboard.leftViewController()
+            leftViewController!.animals = Animal.allCats()
+            
+            addChildViewController(leftViewController!)
+        }
     }
     
     func addRightPanelViewController() {
