@@ -23,6 +23,8 @@ class ContainerViewController: UIViewController {
     var currentState: SlideOutState = .BothCollapsed
     var leftViewController: SidePanelViewController?
     
+    let centerPanelExpandedOffset: CGFloat = 60
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -39,6 +41,7 @@ class ContainerViewController: UIViewController {
 }
 
 extension ContainerViewController: CenterViewControllerDelegate {
+    
     func toggleLeftPanel() {
         let notAlreadyExpanded = (currentState != .LeftPanelExpanded)
         
@@ -58,7 +61,7 @@ extension ContainerViewController: CenterViewControllerDelegate {
             leftViewController = UIStoryboard.leftViewController()
             leftViewController!.animals = Animal.allCats()
             
-            addChildViewController(leftViewController!)
+            addChildSidePanelController(leftViewController!)
         }
     }
     
@@ -74,7 +77,32 @@ extension ContainerViewController: CenterViewControllerDelegate {
     }
     
     func animateLeftPanel(shouldExpand: Bool) {
-        
+        if (shouldExpand) {
+            currentState = .LeftPanelExpanded
+            
+            animateCenterPanelXPosition(CGRectGetWidth(centerNavigationController.view.frame) - centerPanelExpandedOffset)
+        }
+        else {
+            animateCenterPanelXPosition(0) { (finished) in
+                self.currentState = .BothCollapsed
+                
+                self.leftViewController!.view.removeFromSuperview()
+                self.leftViewController = nil
+            }
+        }
+    }
+    
+    func animateCenterPanelXPosition(targetPosition: CGFloat, completion: ((Bool) -> Void)! = nil) {
+        UIView.animateWithDuration(
+            0.5,
+            delay: 0,
+            usingSpringWithDamping: 0.8,
+            initialSpringVelocity: 0,
+            options: .CurveEaseInOut,
+            animations: {
+                self.centerNavigationController.view.frame.origin.x = targetPosition
+            },
+            completion: completion)
     }
     
     func animateRightPanel(shouldExpand: Bool) {
